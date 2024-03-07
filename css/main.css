@@ -1,0 +1,55 @@
+@import url('https://fonts.googleapis.com/css2?family=Teko:wght@300..700&display=swap');
+
+body {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+
+.main {
+    background-image: url(../img/black-bg.jpg);
+    background-size: cover;
+    height: 100vh;
+}
+
+
+.header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.header_logo {
+    padding: 20px;
+}
+
+.header_menu__list {
+    display: flex;
+}
+
+.header_menu__list li {
+    list-style: none;
+}
+
+.header_menu__list a {
+    color: #fff;
+    font-family: 'Teko', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    text-decoration: none;
+    padding: 10px 50px;
+}
+
+.header_myprofile {
+    padding: 20px;
+    color: #fff;
+    font-family: 'Teko', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
