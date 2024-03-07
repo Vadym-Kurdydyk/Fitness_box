@@ -45,7 +45,9 @@ body {
 }
 
 .header_myprofile {
-    padding: 20px;
+    display: flex;
+    align-items: center;
+    padding: 10px 50px;
     color: #fff;
     font-family: 'Teko', sans-serif;
     font-size: 20px;
