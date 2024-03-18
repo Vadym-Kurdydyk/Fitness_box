@@ -4,25 +4,42 @@
 <style>
   .home-container{
     display: grid;
-    grid-template-columns: 1fr 3fr;
+    grid-template-columns: 3fr 1fr;
 
 }
 </style>
   <div class="home-container">
     <h1>Welcome to the Home Page</h1>
-    <div>Browse topics</div>
+    <div>
+      <h3>Browse topics</h3>
+      <hr>
+      <div>
+        <a href = "{% url 'home'%}">All</a>
+      </div>
+      {%for topic in topics%}
+      <div>
+        <a href = "{% url 'home'%}?q={{topic.name}}">{{topic}}</a>
+      </div>
+      {%endfor%}
+
+    </div>
     <div class="options">
+      <h5>{{room_count}} rooms available</h5>
       <a href="{% url 'create-room' %}" class="button">Create Room</a>
     <div class="room-list">
       {% for room in rooms %}
+        
         <div class="room">
+          {%if request.user == room.host%}
           <a href="{% url 'update-room' room.id %}" class="action">Edit</a>
           <a href="{%url 'delete-room' room.id %}" class="action">Delete</a>
+          {%endif%}
           <span class="host">Host: @{{ room.host.username }}</span>
           
           <div class="room-details">
             <span class="id">{{ room.id }}:</span>
             <a href="{% url 'room' room.id %}" class="room-link">{{ room.name }}</a>
+            <hr>
           </div>
           
           <small class="topic">{{ room.topic.name }}</small>
