@@ -6,8 +6,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm 
 from django.contrib import messages
-from .models import Room, Topic
-from .forms import RoomForm
+from .models import Room, Topic, Message
+from .forms import RoomForm, MessageForm
 
 
 def loginPage(request):
@@ -38,7 +38,7 @@ def logoutUser(request):
 
 def registerPage(request):
     form = UserCreationForm()
-    if request.user == "POST":
+    if request.method == "POST":
         form = UserCreationForm(request.POST)
         if form.is_valid:
             user = form.save(comit = False)
@@ -52,8 +52,18 @@ def registerPage(request):
 
 def room(request,pk):
     room = Room.objects.get(id = pk )
+    room_messages = room.message_set.all().order_by('-created')
+    participants = room.participants.all()
+    if request.method == "POST":
+        mesage = Message.objects.create(
+            user = request.user,
+            room = room,
+            body = request.POST.get('body')
+        )
+        room.participants.add(request.user)
+        return redirect('room', pk = room.id)
     
-    context = {'room': room}
+    context = {'room': room, 'room_messages': room_messages,'participants':participants}
     return render(request, r'base/room.html', context)
 def home(request):
     q = request.GET.get('q') if request.GET.get('q') != None else ''
@@ -107,3 +117,30 @@ def deleteRoom(request,pk):
         return redirect("home")
     context = {'obj':room}
     return render(request, r'base/delete.html', context)
+
+@login_required(login_url = 'login-register')
+def deleteMessage(request,pk):
+    message = Message.objects.get(id=pk)
+    if request.user != message.user:
+        return HttpResponse("Access restricted")
+    if request.method == "POST":
+        message.delete()
+        return redirect("room", pk= message.room.id)
+    context = {'obj':message}
+    return render(request, r'base/delete.html', context)
+
+@login_required(login_url = 'login-register')
+def updateMessage(request, pk):
+    message = Message.objects.get(id=pk)
+    form = MessageForm(instance = message)
+    if request.user != message.user:
+        return HttpResponse("Access restricted")
+
+    if request.method == "POST":
+        form = MessageForm(request.POST, instance= message)
+    if form.is_valid():
+        form.save()
+        return redirect("room", pk= message.room.id)
+    
+    context = {"form": form}
+    return render(request, r'base/message_form.html', context)
