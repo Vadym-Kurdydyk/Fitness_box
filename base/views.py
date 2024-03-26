@@ -50,9 +50,17 @@ def registerPage(request):
     context = {'form':form}
     return render(request, 'base/login-register.html',context)
 
+def userProfile(request, pk):
+    user = User.objects.get(id = pk)
+    rooms = user.room_set.all()
+    room_messages = user.message_set.all()
+    topics = Topic.objects.all()
+    context = {'user':user, 'rooms':rooms,'room_messages':room_messages,'topics':topics}
+    return render(request, 'base/profile.html',context)
+
 def room(request,pk):
     room = Room.objects.get(id = pk )
-    room_messages = room.message_set.all().order_by('-created')
+    room_messages = room.message_set.all()
     participants = room.participants.all()
     if request.method == "POST":
         mesage = Message.objects.create(
@@ -65,6 +73,7 @@ def room(request,pk):
     
     context = {'room': room, 'room_messages': room_messages,'participants':participants}
     return render(request, r'base/room.html', context)
+
 def home(request):
     q = request.GET.get('q') if request.GET.get('q') != None else ''
     topics = Topic.objects.all()
@@ -75,7 +84,9 @@ def home(request):
         
         )
     room_count = rooms.count()
-    context = {'rooms': rooms, 'topics':topics,'room_count':room_count }
+    room_messages = Message.objects.filter(room__topic__name__icontains = q)
+    context = {'rooms': rooms, 'topics':topics,'room_count':room_count,
+               'room_messages':room_messages }
     return render(request, r'base/home.html',context)
 
 @login_required(login_url = 'login-register')
@@ -86,8 +97,11 @@ def createRoom(request):
         form = RoomForm(request.POST)
         print(request.POST)
     if form.is_valid():
-        form.save()
+        room = form.save(commit = False)
+        room.host = request.user
+        room.save()
         return redirect("home")
+        
     context = {"form": form}
     return render(request, r'base/room_form.html', context)
 
