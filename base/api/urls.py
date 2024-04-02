@@ -9,7 +9,7 @@ urlpatterns = [
     
     path('topics/', views.topic_list),
     
-    #  path('messages/', views.getMessages),
+     path('messages/', views.messages_list),
     
     
 ]

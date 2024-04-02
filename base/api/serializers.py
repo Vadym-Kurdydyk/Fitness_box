@@ -1,5 +1,5 @@
 from rest_framework.serializers import ModelSerializer
-from base.models import Room, Topic
+from base.models import Room, Topic, Message
 
 class RoomSerializer(ModelSerializer):
     class Meta:
@@ -11,7 +11,7 @@ class TopicSerializer(ModelSerializer):
         model = Topic
         fields = '__all__'
         
-# class MessageSerializer(ModelSerializer):
-#     class Meta:
-#         model = Topic
-#         fields = ['body']
+class MessageSerializer(ModelSerializer):
+    class Meta:
+        model = Message
+        fields = '__all__'
