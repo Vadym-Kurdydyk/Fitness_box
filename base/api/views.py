@@ -6,22 +6,19 @@ from base.models import Room, Topic, Message
 from . import serializers
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
-from rest_framework import status
 from rest_framework.views import APIView
-from rest_framework import permissions
 from base.api.permissions import IsOwnerOrReadOnly
-from rest_framework import mixins
-from rest_framework import generics
+from rest_framework import mixins, generics, permissions, renderers, status
+from rest_framework.reverse import reverse
 
 
 @api_view(['GET'])
-def getRoutes(request):
-    routes = [
-        'GET /api',
-        'GET /api/rooms',
-        'GET /api/rooms/:id',
-        'GET /api/topics/'
-    ]
+def api_root(request, format = None):
+    routes = {
+        'rooms': reverse('room-list', request=request, format=format),
+        'topics': reverse('topic-list',request=request,format=format),
+        'messages': reverse('message-list', request=request,format=format)
+    }
     return Response(routes)
 
 class RoomList(mixins.ListModelMixin,
@@ -59,7 +56,14 @@ class RoomDetail(mixins.RetrieveModelMixin,
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
      
-
+class RoomHighlight(generics.GenericAPIView):
+    queryset = Room.objects.all()
+    renderer_classes = [renderers.StaticHTMLRenderer]
+    
+    def get(self, request, *args, **kwargs):
+        room = self.get_object()
+        return Response(room)
+    
 class TopicList(mixins.ListModelMixin,
                mixins.CreateModelMixin,
                generics.GenericAPIView):
