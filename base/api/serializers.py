@@ -1,6 +1,7 @@
-from email.policy import default
+
 from rest_framework import serializers
 from base.models import Room, Topic, Message
+from django.contrib.auth.models import User
 
 class CurrentUserDefault:
     """
@@ -28,7 +29,15 @@ class RoomSerializer(serializers.HyperlinkedModelSerializer):
 
 class MessageSerializer(serializers.ModelSerializer):
     user = serializers.StringRelatedField(many = False,read_only = True, default = CurrentUserDefault)
-    room = serializers.StringRelatedField(many = False, read_only = True)
+    room = serializers.HyperlinkedRelatedField(many = False, view_name='room-detail', read_only=True)
     class Meta:
         model = Message
         fields = '__all__'
+        
+class UserSerializer(serializers.ModelSerializer):
+    user_permissions = serializers.StringRelatedField(many = True, read_only = True)
+    url = serializers.HyperlinkedIdentityField(many = False, view_name = 'user-detail', read_only = True)
+    class Meta:
+        model = User
+        fields = '__all__'
+        
