@@ -37,6 +37,7 @@ class MessageSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     user_permissions = serializers.StringRelatedField(many = True, read_only = True)
     url = serializers.HyperlinkedIdentityField(many = False, view_name = 'user-detail', read_only = True)
+    highlighted = serializers.HyperlinkedIdentityField(many = False, view_name = 'user-highlighted', read_only = True) 
     class Meta:
         model = User
         fields = '__all__'
