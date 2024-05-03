@@ -29,17 +29,9 @@ if (conversationThread) {
 
 // Switch theme
 const themeToggle = document.getElementById('theme-toggle');
-const themeStyle = document.getElementById('theme-style');
 
 themeToggle.addEventListener('click', () => {
-  const currentTheme = themeStyle.dataset.theme;
-  if (currentTheme === 'light') {
-    themeStyle.setAttribute('href', '{% static "styles/style-dark.css" %}');
-    themeStyle.dataset.theme = 'dark';
-  } else {
-    themeStyle.setAttribute('href', '{% static "styles/style-light.css" %}');
-    themeStyle.dataset.theme = 'light';
-  }
+  document.documentElement.classList.toggle('light');
 });
 
 

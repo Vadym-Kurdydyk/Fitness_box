@@ -6,13 +6,13 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link id="theme-style" rel="stylesheet" href="{% static 'styles/style-light.css' %}" data-theme="light" />
-    <link rel="stylesheet" href="{% static 'styles/style-dark.css' %}" disabled/>
-    <title>Fitness box - your little fitness journey helper!</title>
+    <link rel="shortcut icon" href="assets/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="{% static 'styles/style-dark.css' %}" />
+    <title>StudyBuddy - Find study partners around the world!</title>
 </head>
 
 <body>
-
+    <button id="theme-toggle">Toggle Theme</button>
     {% include 'navbar.html' %}
 
     {% if messages %}
@@ -27,7 +27,7 @@
 
 
     {% endblock %}
-    <button id="theme-toggle">Toggle Theme</button>
+
     <script src="{% static 'js/script.js' %}"></script>
 </body>
 
