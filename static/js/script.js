@@ -41,14 +41,58 @@ if (savedTheme) {
   }
 }
 
-
 function toggleTheme() {
   const currentTheme = themeToggleCheckbox.checked ? 'light' : 'dark';
   localStorage.setItem('theme', currentTheme);
   document.documentElement.classList.toggle('light', currentTheme === 'light');
 }
 
-
 themeToggle.addEventListener('click', toggleTheme);
 
+document.addEventListener("DOMContentLoaded", function(){
+  const editButtons = document.querySelectorAll(".thread__update");
+  const editForms = document.querySelectorAll(".edit__message");
+  const messageContents = document.querySelectorAll(".thread__message");
 
+
+  editButtons.forEach((editButton, index) => {
+      editButton.addEventListener("click", function() {
+          console.log("Edit button clicked!");
+          messageContents[index].toggleAttribute("hidden"); 
+          editForms[index].toggleAttribute("hidden"); 
+      });
+  });
+
+ 
+  editForms.forEach((editForm, index) => {
+      editForm.addEventListener("submit", function(event) {
+          event.preventDefault(); 
+
+          const messageId = editForm.parentElement.dataset.messageId;
+          const csrfToken = document.querySelector('[name="csrfmiddlewaretoken"]').value;
+          const messageBodyTextarea = editForm.querySelector("textarea[name='body']"); 
+          const messageBody = messageBodyTextarea.value; 
+
+          const url = `/update-message/${messageId}/`;
+          fetch(url, {
+              method: "POST",
+              body: JSON.stringify({ body: messageBody }),
+              headers: {
+                  "Content-Type": "application/json",
+                  "X-CSRFToken": csrfToken 
+              }
+          })
+          .then(response => response.json())
+          .then(data => {
+              
+              messageContents[index].textContent = data.updated_message_body;
+              messageContents[index].toggleAttribute("hidden", false); 
+              editForm.toggleAttribute("hidden", true); 
+          })
+          .catch(error => {
+              console.error('Error:', error);
+              
+          });
+      });
+  });
+});

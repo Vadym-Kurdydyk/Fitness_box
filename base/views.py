@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.db.models import Q
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
@@ -8,6 +8,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from .models import Room, Topic, Message, User
 from .forms import RoomForm, MessageForm, UserForm, MyUserCreationForm
+import json
 
 
 def loginPage(request):
@@ -77,9 +78,12 @@ def room(request,pk):
         )
         room.participants.add(request.user)
         return redirect('room', pk = room.id)
-    
+    if request.method == "PUT":
+        updateMessage(request,pk)
     context = {'room': room, 'room_messages': room_messages,'participants':participants}
     return render(request, r'base/room.html', context)
+    
+        
 
 def home(request):
     q = request.GET.get('q') if request.GET.get('q') != None else ''
@@ -160,21 +164,34 @@ def deleteMessage(request,pk):
     context = {'obj':message}
     return render(request, r'base/delete.html', context)
 
-@login_required(login_url = 'login')
+@login_required(login_url='login')
 def updateMessage(request, pk):
-    message = Message.objects.get(id=pk)
-    form = MessageForm(instance = message)
+    try:
+        message = Message.objects.get(id=pk)
+    except Message.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Message not found'}, status=404)
+
     if request.user != message.user:
-        return HttpResponse("Access restricted")
+        return HttpResponse("Access restricted", status=403)
 
     if request.method == "POST":
-        form = MessageForm(request.POST, instance= message)
-    if form.is_valid():
-        form.save()
-        return redirect("room", pk= message.room.id)
-    
-    context = {"form": form}
-    return render(request, r'base/message_form.html', context)
+        try:
+            data = json.loads(request.body)
+            body = data.get('body')
+        except json.JSONDecodeError:
+            return JsonResponse({'success': False, 'error': 'Invalid JSON format'}, status=400)
+
+        if body:
+            message.body = body
+            message.save()
+            return JsonResponse({'success': True, 'updated_message_body': message.body})
+        else:
+            return JsonResponse({'success': False, 'error': 'Missing message body'}, status=400)
+    else:
+        form = MessageForm(instance=message)
+        context = {"form": form}
+        return render(request, 'base/message_form.html', context)
+
 
 def topicsPage(request):
     q = request.GET.get('q') if request.GET.get('q') != None else ''

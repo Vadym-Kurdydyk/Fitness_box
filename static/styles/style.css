@@ -1227,3 +1227,49 @@ a {
 #theme-toggle:checked + .slider::before {
   transform: translateX(26px);
 }
+
+
+/*Edit message form*/
+
+.edit__message {
+  background-color: var(--color-dark);
+  border-radius: 0.7rem;
+  padding: 1rem; 
+}
+
+.edit__message .input-wrapper {
+
+  margin-top: 0; 
+}
+
+.edit__message textarea {
+  width: calc(100% - 2rem); 
+  height: 2rem;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--color-light);
+  font-size: 1.4rem;
+  font-weight: 500;
+}
+
+.edit__message textarea::placeholder {
+  color: var(--color-light-gray);
+}
+
+.edit__message button {
+  margin-top: 0.5rem;
+  background-color: var(--color-dark-light);
+  color: var(--color-light);
+  border: none;
+  outline: none;
+  border-radius: 0.7rem;
+  padding: 0.8rem 1.2rem;
+  font-size: 1.4rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.edit__message button:hover {
+  background-color: var(--color-dark);
+}
