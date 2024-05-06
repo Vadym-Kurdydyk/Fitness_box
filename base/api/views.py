@@ -117,38 +117,46 @@ class MessagesDetail(mixins.RetrieveModelMixin,
      
 
     
-class UserList(mixins.ListModelMixin,
-               mixins.CreateModelMixin,
-               generics.GenericAPIView):
+# class UserList(mixins.ListModelMixin,
+#                mixins.CreateModelMixin,
+#                generics.GenericAPIView):
     
-    '''
-    List all users, or create a new user.
-    '''
-    queryset = User.objects.all()
-    serializer_class = serializers.UserSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-    def get(self, request, *args, **kwargs):
-        return self.list(request, *args, **kwargs)
+#     '''
+#     List all users, or create a new user.
+#     '''
+#     queryset = User.objects.all()
+#     serializer_class = serializers.UserSerializer
+#     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+#     def get(self, request, *args, **kwargs):
+#         return self.list(request, *args, **kwargs)
 
-    def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
+#     def post(self, request, *args, **kwargs):
+#         return self.create(request, *args, **kwargs)
     
     
-class UserDetail(mixins.RetrieveModelMixin,
-                mixins.UpdateModelMixin,
-                mixins.DestroyModelMixin,
-                generics.GenericAPIView):
-    '''
-    Retrieve, update or delete a user instance.
-    '''
-    queryset = User.objects.all()
-    serializer_class = serializers.UserSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly_user]
-    def get(self, request, *args, **kwargs):
-        return self.retrieve(request, *args, **kwargs)
+# class UserDetail(mixins.RetrieveModelMixin,
+#                 mixins.UpdateModelMixin,
+#                 mixins.DestroyModelMixin,
+#                 generics.GenericAPIView):
+#     '''
+#     Retrieve, update or delete a user instance.
+#     '''
+#     queryset = User.objects.all()
+#     serializer_class = serializers.UserSerializer
+#     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly_user]
+#     def get(self, request, *args, **kwargs):
+#         return self.retrieve(request, *args, **kwargs)
 
-    def put(self, request, *args, **kwargs):
-        return self.update(request, *args, **kwargs)
+#     def put(self, request, *args, **kwargs):
+#         return self.update(request, *args, **kwargs)
 
-    def delete(self, request, *args, **kwargs):
-        return self.destroy(request, *args, **kwargs)
+#     def delete(self, request, *args, **kwargs):
+#         return self.destroy(request, *args, **kwargs)
+    
+# class UserHighlight(generics.GenericAPIView):
+#     queryset = Room.objects.all()
+#     renderer_classes = [renderers.StaticHTMLRenderer]
+    
+#     def get(self, request, *args, **kwargs):
+#         room = self.get_object()
+#         return Response(room)
