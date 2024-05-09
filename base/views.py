@@ -71,7 +71,13 @@ def room(request,pk):
     room_messages = room.message_set.all()
     participants = room.participants.all()
     if request.method == "POST":
-        create_message(request,pk)
+     message = Message.objects.create(
+            user = request.user,
+            room = Room.objects.get(id = pk ),
+            body = request.POST.get('body')
+        )
+     room.participants.add(request.user)
+     return redirect('room', pk = room.id)   
     if request.method == "PUT":
         updateMessage(request,pk)
     context = {'room': room, 'room_messages': room_messages,'participants':participants}
@@ -79,13 +85,7 @@ def room(request,pk):
     
 @login_required(login_url='login')
 def create_message(request,pk):
-    mesage = Message.objects.create(
-            user = request.user,
-            room = Room.objects.get(id = pk ),
-            body = request.POST.get('body')
-        )
-    room.participants.add(request.user)
-    return redirect('room', pk = room.id)     
+     pass
 
 def home(request):
     q = request.GET.get('q') if request.GET.get('q') != None else ''
