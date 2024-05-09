@@ -85,8 +85,16 @@ def room(request, pk):
     return render(request, 'base/room.html', context)
 
 @login_required(login_url='login')
-def create_message(request,pk):
-     pass
+def createMessage(request,pk):
+      if request.method == 'POST':
+        message = Message.objects.create(
+            user=request.user,
+            room=Room.objects.get(id=pk),
+            body=request.POST.get('body')
+        )
+        room.participants.add(request.user)
+        return redirect('room', pk=room.id)
+
 
 def home(request):
     q = request.GET.get('q') if request.GET.get('q') != None else ''
