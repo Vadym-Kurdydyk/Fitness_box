@@ -71,19 +71,21 @@ def room(request,pk):
     room_messages = room.message_set.all()
     participants = room.participants.all()
     if request.method == "POST":
-        mesage = Message.objects.create(
-            user = request.user,
-            room = room,
-            body = request.POST.get('body')
-        )
-        room.participants.add(request.user)
-        return redirect('room', pk = room.id)
+        create_message(request,pk)
     if request.method == "PUT":
         updateMessage(request,pk)
     context = {'room': room, 'room_messages': room_messages,'participants':participants}
     return render(request, r'base/room.html', context)
     
-        
+@login_required(login_url='login')
+def create_message(request,pk):
+    message = Message.objects.create(
+            user = request.user,
+            room = room,
+            body = request.POST.get('body')
+        )
+    room.participants.add(request.user)
+    return redirect('room', pk = room.id)     
 
 def home(request):
     q = request.GET.get('q') if request.GET.get('q') != None else ''
