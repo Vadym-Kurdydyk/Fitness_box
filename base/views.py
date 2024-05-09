@@ -71,14 +71,7 @@ def room(request, pk):
     room_messages = room.message_set.all()
     participants = room.participants.all()
 
-    context = {'room': room, 'room_messages': room_messages,
-               'participants': participants}
-    return render(request, 'base/room.html', context)
-
-@login_required(login_url='login')
-def createMessage(request,pk):
-      if request.method == 'POST':
-        room = Room.objects.get(id=pk),
+    if request.method == 'POST':
         message = Message.objects.create(
             user=request.user,
             room=room,
@@ -87,6 +80,9 @@ def createMessage(request,pk):
         room.participants.add(request.user)
         return redirect('room', pk=room.id)
 
+    context = {'room': room, 'room_messages': room_messages,
+               'participants': participants}
+    return render(request, 'base/room.html', context)
 
 def home(request):
     q = request.GET.get('q') if request.GET.get('q') != None else ''
