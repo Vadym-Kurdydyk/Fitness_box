@@ -34,7 +34,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-&psk#na5l=p3q8
 DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
 ALLOWED_HOSTS = ['localhost', '127.0.0.1','VadymK.pythonanywhere.com']
 
-CSRF_TRUSTED_ORIGINS = ['https://vadymk.pythonanywhere.com']
+CSRF_TRUSTED_ORIGINS = ['https://vadymk.pythonanywhere.com', 'http://vadymk.pythonanywhere.com']
 # Application definition
 
 INSTALLED_APPS = [

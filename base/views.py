@@ -79,9 +79,9 @@ def room(request,pk):
     
 @login_required(login_url='login')
 def create_message(request,pk):
-    message = Message.objects.create(
+    mesage = Message.objects.create(
             user = request.user,
-            room = room,
+            room = Room.objects.get(id = pk ),
             body = request.POST.get('body')
         )
     room.participants.add(request.user)
